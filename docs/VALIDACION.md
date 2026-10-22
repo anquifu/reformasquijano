@@ -22,6 +22,12 @@
 
 Una ejecución Lighthouse móvil local, con simulación de red/CPU, obtuvo **98/100**, **LCP 2,4 s**, **CLS 0**, **TBT 0 ms**. Informe: `artifacts/lighthouse-mobile.json`. Se tomó antes de los últimos ajustes de contraste y del origen permitido en la API; no es una medición del hosting final ni garantiza resultados con usuarios reales. INP y Core Web Vitals de campo todavía no están medidos.
 
+## Corrección del aviso de dependencias en Hostinger
+
+El escáner señaló `basic-ftp@5.3.1` (CVE-2026-102990, GHSA-c475-qrg2-pj4r). Era una dependencia transitiva de Lighthouse 12.8.2, usada para auditorías locales. Se actualizó Lighthouse a **13.5.0**, fijando la versión en `package.json` y regenerando `package-lock.json`. La cadena nueva ya no instala `basic-ftp`; no se oculta ni se excluye el aviso del escáner.
+
+La auditoría completa, incluyendo desarrollo, pasó de 27 avisos a **0 vulnerabilidades reportadas**. La compilación, la comprobación Astro/TypeScript y las cinco pruebas del backend volvieron a pasar. Hostinger debe desplegar el commit actualizado de `main` e instalar con `npm ci` para usar este árbol de dependencias. Esta corrección resuelve el aviso del paquete; el funcionamiento del dominio requiere comprobar el resultado del despliegue en Hostinger.
+
 ## Límites y advertencias
 
 El contenido SEO utiliza los documentos aportados y los servicios confirmados. No se dispone de métricas verificadas de Ubersuggest ni de una investigación de competidores actualizada; no se han presentado volúmenes o posiciones inventadas.
