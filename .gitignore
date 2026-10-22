@@ -1,0 +1,15 @@
+node_modules/
+dist/
+.astro/
+.env
+.env.*
+!.env.example
+var/
+*.sqlite*
+*.log
+public/images/*-source.png
+assets/*-source.png
+artifacts/screenshots/
+artifacts/lighthouse*.json
+artifacts/*.html
+test-results/

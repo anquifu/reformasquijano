@@ -1,0 +1,13 @@
+---
+interface Props { items: string[][]; title?: string }
+const { items, title = 'Antes de empezar' } = Astro.props;
+---
+<section class="section faq" aria-label={title}>
+  <div class="section-heading"><span class="eyebrow">Preguntas frecuentes</span><h2>{title}</h2></div>
+  <div class="faq-list">
+    {items.map(([question, answer], index) => <details open={index === 0}>
+      <summary>{question}<span class="faq-toggle" aria-hidden="true">+</span></summary>
+      <p>{answer}</p>
+    </details>)}
+  </div>
+</section>

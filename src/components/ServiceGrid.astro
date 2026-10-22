@@ -1,0 +1,14 @@
+---
+import { services } from '../data/site.mjs';
+import Icon from './Icon.astro';
+interface Props { ids?: string[]; title?: string; }
+const { ids = ['pisos','cocinas','banos','pladur','desatascos','cerrajeria'], title = 'Servicios para tu vivienda' } = Astro.props;
+---
+<section class="section" id="servicios" aria-label={title}>
+  <div class="section-heading"><span class="eyebrow">¿Qué necesitas?</span><h2>{title}</h2></div>
+  <div class="services-grid">{ids.map((id:string) => services.find(s=>s.id===id)!).filter(Boolean).map(service => <a class="service-card" href={service.path}>
+    <Icon name={service.icon} size={36} />
+    <span><strong>{service.label}</strong><small>{service.id === 'cerrajeria' ? 'Apertura de puertas' : service.summary}</small></span>
+    <Icon class="service-arrow" name="arrow-right" size={20} />
+  </a>)}</div>
+</section>

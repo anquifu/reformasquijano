@@ -1,0 +1,28 @@
+{
+  "screens": [
+    "artifacts/screenshots/home-1440.png",
+    "artifacts/screenshots/home-802.png",
+    "artifacts/screenshots/home-390.png"
+  ],
+  "errors": [],
+  "accessibility": [
+    {
+      "width": 1440,
+      "violations": []
+    },
+    {
+      "width": 802,
+      "violations": []
+    },
+    {
+      "width": 390,
+      "violations": []
+    }
+  ],
+  "checks": [
+    "AJAX: HTTP 201, confirmación y evento sin datos personales",
+    "Menú Escape, enlaces de teléfono y WhatsApp",
+    "Sin desbordamiento en 1440, 802 y 390 px",
+    "Formulario nativo sin JavaScript: confirmación con cookie"
+  ]
+}

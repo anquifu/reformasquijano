@@ -1,0 +1,49 @@
+---
+import '@fontsource/manrope/latin-400.css';
+import '@fontsource/manrope/latin-600.css';
+import '@fontsource/manrope/latin-800.css';
+import '../styles/global.css';
+import Icon from '../components/Icon.astro';
+import { business, quotePath, services } from '../data/site.mjs';
+import { siteUrl, indexingEnabled } from '../lib/config.mjs';
+import { structuredData } from '../lib/structured-data.mjs';
+const { page } = Astro.props;
+const canonical = `${siteUrl}${page.path}`;
+const indexable = Boolean(page.indexable && indexingEnabled);
+const schema = JSON.stringify(structuredData(page)).replace(/</g, '\\u003c');
+---
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{page.title}</title><meta name="description" content={page.description} />
+    <meta name="robots" content={indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'} />
+    {page.id !== '404' && <link rel="canonical" href={canonical} />}
+    <meta property="og:type" content="website" /><meta property="og:locale" content="es_ES" /><meta property="og:site_name" content={business.name} />
+    <meta property="og:title" content={page.title} /><meta property="og:description" content={page.description} /><meta property="og:url" content={canonical} />
+    <meta property="og:image" content={`${siteUrl}/images/salon-cocina-roble-social.webp`} /><meta property="og:image:alt" content="Salón con cocina de roble y luz natural; imagen ilustrativa" />
+    <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={page.title} /><meta name="twitter:description" content={page.description} /><meta name="twitter:image" content={`${siteUrl}/images/salon-cocina-roble-social.webp`} />
+    <meta name="theme-color" content="#12364d" />
+    <link rel="icon" href="/icons/house-line.svg" type="image/svg+xml" />
+    <script is:inline type="application/ld+json" nonce={Astro.locals.nonce} set:html={schema} />
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+    <header class="site-header">
+      <div class="container header-inner">
+        <a class="brand" href="/" aria-label="Reformas Quijano, inicio"><span>Reformas</span><strong>Quijano</strong><small>A Coruña</small></a>
+        <nav class="desktop-nav" aria-label="Navegación principal"><a href="/#servicios">Servicios</a><a href="/zonas-de-servicio/">Zonas</a><a href={quotePath}>Presupuesto</a></nav>
+        <a class="header-phone" href={business.tel} data-conversion="click_phone" aria-label={`Llamar al ${business.phone}`}><Icon name="phone" size={26} /><span>{business.phone}</span></a>
+        <details class="menu"><summary aria-label="Abrir menú"><Icon name="list" size={28} /><span class="sr-only">Menú</span></summary><nav aria-label="Menú de servicios">{services.map(service=><a href={service.path}>{service.label}</a>)}<a href="/zonas-de-servicio/">Zonas de servicio</a><a href={quotePath}>Solicitar presupuesto</a></nav></details>
+      </div>
+    </header>
+    <main id="contenido"><slot /></main>
+    <footer class="site-footer"><div class="container footer-grid">
+      <div><a class="brand" href="/"><span>Reformas</span><strong>Quijano</strong></a><p>Servicio a domicilio.<br />A Coruña y alrededores.</p></div>
+      <div class="footer-contact"><a class="footer-phone" href={business.tel} data-conversion="click_phone"><Icon name="phone" />{business.phone}</a><a href={business.whatsapp} data-conversion="click_whatsapp" target="_blank" rel="noopener noreferrer">Llamadas y WhatsApp</a><a href={`mailto:${business.email}`}>{business.email}</a><p>{business.hours[0]}<br />{business.hours[1]}</p></div>
+      <nav aria-label="Enlaces del pie"><a href="/#servicios">Servicios</a><a href="/zonas-de-servicio/">Zonas de servicio</a><a href={quotePath}>Contacto y presupuesto</a><a href="/privacidad/">Privacidad</a><a href="/aviso-legal/">Aviso legal</a></nav>
+    </div><div class="container footer-bottom"><span>Reformas Quijano</span><span>Imágenes de inspiración generadas. No representan obras propias.</span></div></footer>
+    <div class="mobile-contact" aria-label="Contacto rápido"><a href={business.tel} data-conversion="click_phone"><Icon name="phone" size={21} />Llamar</a><a href={business.whatsapp} data-conversion="click_whatsapp" target="_blank" rel="noopener noreferrer"><Icon name="whatsapp-logo" size={21} />WhatsApp</a><a href={quotePath} class="mobile-quote">Presupuesto</a></div>
+    <script src="../scripts/client.ts"></script>
+  </body>
+</html>

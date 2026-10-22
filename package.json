@@ -1,0 +1,40 @@
+{
+  "name": "reformas-quijano",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "node scripts/seo-map.mjs && astro build",
+    "start": "node dist/server/entry.mjs",
+    "check": "astro check",
+    "test": "node --test tests/*.test.mjs",
+    "test:web": "node scripts/validate-web.mjs",
+    "test:browser": "node scripts/browser-check.mjs",
+    "seo:map": "node scripts/seo-map.mjs",
+    "leads": "node scripts/leads.mjs",
+    "mail:retry": "node scripts/retry-mail.mjs"
+  },
+  "dependencies": {
+    "@astrojs/node": "11.1.9",
+    "@fontsource/manrope": "5.3.0",
+    "@phosphor-icons/core": "2.1.1",
+    "astro": "7.4.2",
+    "nodemailer": "10.2.1",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.4",
+    "@axe-core/playwright": "^4.10.0",
+    "@types/node": "^24.0.0",
+    "@types/nodemailer": "^7.0.0",
+    "cheerio": "^1.1.0",
+    "lighthouse": "^12.8.0",
+    "playwright": "^1.55.0",
+    "smtp-server": "^3.15.0",
+    "typescript": "^5.9.0"
+  }
+}

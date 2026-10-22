@@ -1,0 +1,24 @@
+---
+import { business, serviceById } from '../data/site.mjs';
+import Icon from './Icon.astro';
+import Coverage from './Coverage.astro';
+import FAQ from './FAQ.astro';
+import LeadForm from './LeadForm.astro';
+const { page } = Astro.props;
+const incident = ['cerrajeria','desatascos'].includes(page.id);
+---
+<section class="service-hero"><div class="container">
+  <nav class="breadcrumbs" aria-label="Ruta de navegación"><a href="/">Inicio</a><span aria-hidden="true">/</span><span aria-current="page">{page.label}</span></nav>
+  <div class="service-hero-grid"><div><span class="eyebrow"><Icon name={page.icon} size={22} /> {incident ? 'Consulta de disponibilidad' : 'Un espacio que quieres mejorar'}</span><h1>{page.h1}</h1><p class="lead">{page.intro}</p>
+    <div class="hero-actions">{incident ? <><a class="button button-primary" href={business.tel} data-conversion="click_phone"><Icon name="phone" />{page.id === 'cerrajeria' ? 'Consultar apertura' : 'Consultar incidencia'}</a><a class="button button-light" href={business.whatsapp} target="_blank" rel="noopener noreferrer" data-conversion="click_whatsapp"><Icon name="whatsapp-logo" />WhatsApp</a></> : <><a class="button button-primary" href="#presupuesto">Solicitar presupuesto<Icon name="arrow-right" size={20} /></a><a class="button button-light" href={business.tel} data-conversion="click_phone"><Icon name="phone" />{business.phone}</a></>}</div>
+  </div><aside class="service-summary"><Icon name={page.icon} size={44} /><strong>{incident ? 'Hablemos de tu caso' : 'Concreta tu proyecto'}</strong><p>{incident ? 'Indica tu municipio, qué ocurre y el tipo de elemento afectado. La disponibilidad se confirma al contactar.' : 'Indica el municipio, las medidas aproximadas y qué te gustaría cambiar. No necesitas tener todas las decisiones tomadas.'}</p><span class="summary-hours">{business.hours[0]}<br />{business.hours[1]}</span></aside></div>
+</div></section>
+<div class="container page-content">
+  <section class="section service-explanation"><div class="section-heading"><span class="eyebrow">El alcance, claro desde el principio</span><h2>{page.heading}</h2><p>{page.body}</p></div><div class="detail-grid">{page.details.map(([title,text]:string[]) => <div><h3>{title}</h3><p>{text}</p></div>)}</div><p class="benefit-note">{page.benefit}</p></section>
+  <section class="section process-section"><div class="section-heading"><span class="eyebrow">Cómo plantear la solicitud</span><h2>{incident ? 'Antes de acordar una intervención' : 'De la consulta al presupuesto'}</h2></div><ol class="process-list">{page.steps.map((step:string,i:number) => <li><span class="step-number">0{i+1}</span><p>{step}</p></li>)}</ol></section>
+  <section class="budget-note section"><Icon name="clipboard-text" size={34} /><div><h2>¿Cómo se valora el presupuesto?</h2><p>{page.cost}</p></div></section>
+  <Coverage />
+  <FAQ items={page.faqs} title={`Dudas sobre ${page.label.toLowerCase()}`} />
+  <section class="section related"><h2>Otros servicios que puedes consultar</h2><div>{page.related.map((id:string) => { const s = serviceById(id); return s && <a href={s.path}>{s.label}<Icon name="arrow-right" size={18} /></a>; })}</div></section>
+  <LeadForm selected={page.id} source={page.path} />
+</div>
