@@ -38,3 +38,8 @@ Faltan hosting, credenciales SMTP, revisión legal y decisión final del slug de
 ## Actualización de arquitectura — 23 de octubre de 2026
 
 A petición del usuario se sustituye el servidor Node por páginas HTML generadas y un procesador PHP para hosting web convencional. La mención a Node/SMTP del diagnóstico inicial es histórica: las instrucciones vigentes están en `ARQUITECTURA.md`, `HOSTINGER.md` y `DESPLIEGUE.md`. Se mantienen pendientes la entrega real de correo y la revisión legal; no se añaden datos de negocio ni métricas SEO inventados.
+
+
+## Simplificación posterior — 23 de octubre de 2026
+
+El usuario solicita una web más fácil de alojar y aporta ecosolarmx.online como referencia. Se conserva el diseño elegido y se entrega HTML estático con contacto directo por teléfono y WhatsApp. Se retiran el formulario PHP, la persistencia de solicitudes y las notificaciones de correo. El buzón sigue siendo un contacto adicional pendiente de verificación, y los datos legales siguen pendientes. La web de referencia no pudo abrirse desde este entorno por restricciones de red; no se afirma haber copiado o comprobado su implementación.

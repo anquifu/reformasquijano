@@ -4,7 +4,7 @@ import Icon from './Icon.astro';
 import ServiceGrid from './ServiceGrid.astro';
 import Coverage from './Coverage.astro';
 import FAQ from './FAQ.astro';
-import LeadForm from './LeadForm.astro';
+import ContactSection from './ContactSection.astro';
 ---
 <section class="hero" aria-labelledby="hero-heading">
   <img class="hero-image" src="/images/salon-cocina-roble-luz-natural-1680.webp" srcset="/images/salon-cocina-roble-luz-natural-640.webp 640w, /images/salon-cocina-roble-luz-natural-960.webp 960w, /images/salon-cocina-roble-luz-natural-1680.webp 1680w" sizes="100vw" width="1680" height="935" fetchpriority="high" loading="eager" alt="Salón luminoso con cocina de roble, isla y mesa de comedor" />
@@ -29,5 +29,5 @@ import LeadForm from './LeadForm.astro';
   </section>
   <Coverage />
   <FAQ items={homeFaqs} />
-  <LeadForm source="/" />
+  <ContactSection />
 </div>

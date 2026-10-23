@@ -18,3 +18,8 @@ La aprobación visual no implica preparación legal u operativa para publicar: v
 ## Revalidación HTML + PHP — 23 de octubre de 2026
 
 Resultado: **passed** en renderizado local. Se volvieron a capturar las páginas a 1440, 802 y 390 px sobre la entrega HTML. El diseño, las fotos, la tipografía y los CTA se conservan. Sin overflow ni infracciones detectadas por Axe en la home. El formulario se probó con AJAX y mediante el enlace PHP para navegación sin JavaScript. La verificación pública en Hostinger sigue pendiente de subir/configurar el hosting PHP.
+
+
+## Versión HTML sencilla — 23 de octubre de 2026
+
+Resultado local: **passed**. Se sustituye el formulario por un panel con llamadas y WhatsApp, conservando hero a todo el ancho, fotografía, tipografía, colores y páginas de servicios. Se inspeccionaron las capturas de escritorio (1440 px) y móvil (390 px), además de la verificación automatizada a 802 px. No hay desbordamiento ni infracciones Axe A/AA detectadas en la home. El contacto también está disponible sin JavaScript. No se han realizado llamadas ni enviado mensajes de prueba.

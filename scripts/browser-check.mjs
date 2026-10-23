@@ -8,6 +8,7 @@ const report={screens:[],errors:[],accessibility:[],checks:[]};
 mkdirSync('artifacts/screenshots',{recursive:true});
 try {
  const mainContext=await browser.newContext();const page=await mainContext.newPage();
+ const apiRequests=[];page.on('request',request=>{if(new URL(request.url()).pathname.startsWith('/api/'))apiRequests.push(request.url());});
  page.on('pageerror',e=>report.errors.push(e.message));
  page.on('console',m=>{if(m.type()==='error')report.errors.push(m.text())});
  for(const width of [1440,802,390]){
@@ -22,23 +23,22 @@ try {
  await page.locator('.menu summary').click();assert.equal(await page.locator('.menu').getAttribute('open'),'');
  await page.keyboard.press('Escape');assert.equal(await page.locator('.menu').getAttribute('open'),null);
  const faq=page.locator('.faq-list details').first();if(await faq.count()){const wasOpen=await faq.getAttribute('open');await faq.locator('summary').click();assert.notEqual(await faq.getAttribute('open'),wasOpen);}
- await page.selectOption('#service','banos');await page.selectOption('#municipality','A Coruña');
- await page.fill('#name','Prueba de navegación');await page.fill('#phone','600000000');
- await page.fill('#description','Solicitud ficticia de prueba del formulario.');await page.locator('[name=privacy]').check();
- await page.evaluate(()=>{window.testConversions=[];document.addEventListener('quijano:conversion',e=>window.testConversions.push(e.detail));});
- const response=page.waitForResponse(r=>r.url().endsWith('/api/solicitudes.php')&&r.request().method()==='POST');
- await page.waitForTimeout(1200);await page.locator('.form-submit').click();assert.equal((await response).status(),201);
- await page.locator('.is-success').waitFor();assert.equal(await page.locator('.form-submit').isDisabled(),true);
- assert.equal(await page.evaluate(()=>window.testConversions.some(x=>x.name==='lead_registered')),true);
- report.checks.push('AJAX: HTTP 201, confirmación y evento sin datos personales','Menú Escape, enlaces de teléfono y WhatsApp','Sin desbordamiento en 1440, 802 y 390 px');
+ const contact=page.locator('#presupuesto');await contact.scrollIntoViewIfNeeded();
+ assert.equal(await contact.locator('a[href^="https://wa.me/"]').isVisible(),true);
+ assert.equal(await contact.locator('a.button[href="tel:+34602089887"]').isVisible(),true);
+ assert.equal(await page.locator('form,input,textarea').count(),0);
+ await page.goto(base+'/cerrajeria/');
+ const whatsapp=new URL(await page.locator('#presupuesto a[href^="https://wa.me/"]').getAttribute('href'));
+ assert.equal(whatsapp.pathname,'/34602089887');assert.match(whatsapp.searchParams.get('text'),/cerrajería/i);
+ assert.deepEqual(apiRequests,[]);assert.deepEqual(await mainContext.cookies(),[]);
+ report.checks.push('Contacto por teléfono y WhatsApp, con mensaje editable por servicio','Sin llamadas a API, formularios ni cookies en la navegación probada','Menú Escape y preguntas frecuentes','Sin desbordamiento en 1440, 802 y 390 px');
  const context=await browser.newContext({javaScriptEnabled:false});const plain=await context.newPage();
- await plain.goto(base+'/api/formulario.php');
- await plain.selectOption('#service','cerrajeria');await plain.selectOption('#municipality','Oleiros');
- await plain.fill('#name','Prueba sin Javascript');await plain.fill('#phone','600000001');
- await plain.fill('#description','Solicitud ficticia sin Javascript para verificación.');await plain.locator('[name=privacy]').check();
- await plain.waitForTimeout(1600);await plain.locator('.form-submit').click();
- await plain.waitForURL('**/api/confirmacion.php');assert.match(await plain.locator('main').innerText(),/registrad/i);
- report.checks.push('Formulario nativo sin JavaScript: confirmación con cookie');
+ await plain.goto(base+'/presupuesto-reformas-a-coruna/');
+ assert.equal(await plain.locator('h1').innerText(),'Presupuesto de reformas en A Coruña');
+ await plain.locator('#presupuesto').scrollIntoViewIfNeeded();
+ assert.equal(await plain.locator('#presupuesto a[href^="https://wa.me/"]').isVisible(),true);
+ assert.equal(await plain.locator('#presupuesto a.button[href="tel:+34602089887"]').isVisible(),true);
+ report.checks.push('Contenido y contacto disponibles sin JavaScript');
  await context.close();
  assert.deepEqual(report.errors,[],'Errores de navegador');
  assert.equal(report.accessibility.flatMap(x=>x.violations).length,0,'Violaciones WCAG detectadas');

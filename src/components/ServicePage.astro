@@ -3,7 +3,7 @@ import { business, serviceById } from '../data/site.mjs';
 import Icon from './Icon.astro';
 import Coverage from './Coverage.astro';
 import FAQ from './FAQ.astro';
-import LeadForm from './LeadForm.astro';
+import ContactSection from './ContactSection.astro';
 const { page } = Astro.props;
 const incident = ['cerrajeria','desatascos'].includes(page.id);
 ---
@@ -20,5 +20,5 @@ const incident = ['cerrajeria','desatascos'].includes(page.id);
   <Coverage />
   <FAQ items={page.faqs} title={`Dudas sobre ${page.label.toLowerCase()}`} />
   <section class="section related"><h2>Otros servicios que puedes consultar</h2><div>{page.related.map((id:string) => { const s = serviceById(id); return s && <a href={s.path}>{s.label}<Icon name="arrow-right" size={18} /></a>; })}</div></section>
-  <LeadForm selected={page.id} source={page.path} />
+  <ContactSection selected={page.id} />
 </div>

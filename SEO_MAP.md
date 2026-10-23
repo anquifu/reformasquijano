@@ -11,11 +11,10 @@ Generado desde `src/data/site.mjs` mediante `npm run seo:map` y en cada build. N
 | /pladur-a-coruna/ | pladur a coruña | Consultar trabajos de pladur y techos | Pladur en A Coruña y trabajos de techos \| Quijano | Pladur en A Coruña y trabajos de techos | Pladur en A Coruña y trabajos de techos con Reformas Quijano. Indica medidas, estado y acabado deseado para consultar el alcance y solicitar presupuesto. | Preparada; indexación desactivada |
 | /desatascos-a-coruna/ | desatascos a coruña | Consultar una incidencia de atasco | Desatascos en A Coruña \| Consulta con Reformas Quijano | Desatascos en A Coruña | Desatascos en A Coruña con Reformas Quijano. Describe la incidencia y el municipio por teléfono o WhatsApp para consultar el alcance y la disponibilidad. | Preparada; indexación desactivada |
 | /cerrajeria/ | cerrajero a coruña | Contactar para apertura de una puerta | Cerrajero en A Coruña \| Apertura de puertas Quijano | Cerrajero en A Coruña para apertura de puertas | ¿Buscas cerrajero en A Coruña? Consulta con Reformas Quijano una apertura de puerta. Indica tu situación y municipio por teléfono o WhatsApp para valorarla. | Preparada; decisión de slug pendiente |
-| /presupuesto-reformas-a-coruna/ | presupuesto reformas a coruña | Enviar solicitud de presupuesto y contacto | Presupuesto de reformas en A Coruña \| Contacta Quijano | Presupuesto de reformas en A Coruña | Solicita presupuesto de reformas en A Coruña a Reformas Quijano. Indica servicio, municipio y lo que necesitas. Contacta también por teléfono o WhatsApp. | Preparada; indexación desactivada |
+| /presupuesto-reformas-a-coruna/ | presupuesto reformas a coruña | Consultar presupuesto por teléfono o WhatsApp | Presupuesto de reformas en A Coruña \| Contacta Quijano | Presupuesto de reformas en A Coruña | Solicita presupuesto de reformas en A Coruña a Reformas Quijano. Indica servicio, municipio y lo que necesitas. Contacta también por teléfono o WhatsApp. | Preparada; indexación desactivada |
 | /zonas-de-servicio/ | zonas de servicio reformas quijano | Comprobar cobertura del negocio | Zonas de servicio de Reformas Quijano \| A Coruña | Zonas de servicio de Reformas Quijano | Consulta las zonas de servicio de Reformas Quijano: A Coruña, Oleiros, Culleredo, Cambre, Arteixo y otros municipios. Cuéntanos dónde necesitas el trabajo. | Preparada; indexación desactivada |
-| /privacidad/ | privacidad reformas quijano | Información de protección de datos | Política de privacidad \| Reformas Quijano | Política de privacidad | Información sobre los datos solicitados en el formulario de Reformas Quijano, su finalidad, conservación y contacto. Documento pendiente de revisión legal. | No indexable |
+| /privacidad/ | privacidad reformas quijano | Información de protección de datos | Política de privacidad \| Reformas Quijano | Política de privacidad | Información de privacidad al contactar con Reformas Quijano por teléfono o WhatsApp. Finalidad y vías de contacto. Documento pendiente de revisión legal. | No indexable |
 | /aviso-legal/ | aviso legal reformas quijano | Identificación e información legal | Aviso legal \| Reformas Quijano | Aviso legal | Datos de contacto e identificación facilitados para Reformas Quijano. Condiciones de uso y contenido ilustrativo. Documento pendiente de revisión legal. | No indexable |
-| /solicitud-recibida/ | No aplica | Confirmación privada de solicitud | Estado de tu solicitud \| Reformas Quijano | Solicitud recibida | Consulta el estado del envío de tu solicitud a Reformas Quijano y las vías de contacto disponibles. El registro no confirma una cita ni una intervención. | No indexable |
 
 ## Variantes, contenido y riesgo de canibalización
 
@@ -31,11 +30,12 @@ Generado desde `src/data/site.mjs` mediante `npm run seo:map` y en cada build. N
 - /: Inicio en la raíz /.
 - /cerrajeria/: URL /cerrajeria/ acordada previamente; propuesta /cerrajero-a-coruna/ pendiente de decisión antes de publicar.
 - /zonas-de-servicio/: Página informativa de cobertura, no landing municipal.
-- Páginas legales, confirmación y cobertura son utilitarias; no se fuerza una keyword de contratación en su slug.
+- Páginas legales y cobertura son utilitarias; no se fuerza una keyword de contratación en su slug.
 - En slugs, H1 y títulos se normalizan tildes y preposiciones; se prioriza el español natural.
 
 ## Migraciones expresas desde la propuesta anterior
 
+- 301: `/solicitud-recibida/` → `/presupuesto-reformas-a-coruna/`.
 - 301: `/reformas-pisos/` → `/reformas-pisos-a-coruna/`.
 - 301: `/reformas-integrales/` → `/reformas-pisos-a-coruna/`.
 - 301: `/reformas-banos/` → `/reformas-banos-a-coruna/`.

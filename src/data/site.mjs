@@ -27,7 +27,7 @@ export const services = [
       ['Actuaciones por zonas', 'Puedes consultar por un trabajo concreto. Si buscas una reforma integral, hay que revisar qué actuaciones incluye antes de considerarla un servicio completo.'],
     ],
     benefit: 'Definir las estancias y los límites del trabajo ayuda a comparar opciones sin dar por incluidos materiales, instalaciones o acabados que aún no se han acordado.',
-    steps: ['Describe las estancias, el estado actual y qué quieres conservar.', 'Revisamos contigo el alcance y la información necesaria para valorarlo.', 'El presupuesto y la planificación se concretan para ese trabajo; el envío del formulario no reserva una fecha.'],
+    steps: ['Describe las estancias, el estado actual y qué quieres conservar.', 'Revisamos contigo el alcance y la información necesaria para valorarlo.', 'El presupuesto y la planificación se concretan para ese trabajo; contactar no reserva una fecha.'],
     cost: 'Para orientar un presupuesto necesitamos conocer superficie, estado, acabados y alcance. No publicamos una tarifa por metro cuadrado porque no describe por sí sola una reforma. Pide que se indiquen materiales, exclusiones e impuestos en la propuesta.',
     faqs: [
       ['¿Puedo consultar por una reforma parcial?', 'Sí. Indica qué estancias o trabajos quieres realizar. No necesitas plantear la reforma de todo el piso para contactar.'],
@@ -132,7 +132,7 @@ export const services = [
     faqs: [
       ['¿Puedo llamar directamente?', 'Sí, al 602 089 887. También puedes escribir por WhatsApp. Indica el municipio y el elemento afectado.'],
       ['¿Atendéis las 24 horas?', 'No se anuncia servicio 24 horas. El horario publicado es de lunes a viernes de 10:00 a 14:00 y de 16:00 a 20:00; sábados de 10:00 a 14:00.'],
-      ['¿El envío del formulario reserva una visita?', 'No. Sirve para registrar la consulta. La disponibilidad y las condiciones se confirman antes de acordar una intervención.'],
+      ['¿Contactar reserva una visita?', 'No. Primero valoramos tu consulta. La disponibilidad y las condiciones se confirman antes de acordar una intervención.'],
     ], related: ['banos', 'cocinas'],
   },
   {
@@ -149,7 +149,7 @@ export const services = [
     body: 'Para esta consulta no necesitas describir una reforma ni fijar un presupuesto de obra. Explica el tipo de puerta, si está cerrada de golpe o con llave y cualquier circunstancia que ayude a entender la situación. La forma de intervenir se valora según el caso.',
     details: [
       ['Apertura de puertas', 'Este es el servicio de cerrajería confirmado. La posibilidad de atender un tipo concreto de puerta se revisa al contactar.'],
-      ['Situación y municipio', 'Describe qué ha pasado e indica tu municipio. No envíes llaves, documentos personales o información innecesaria por el formulario.'],
+      ['Situación y municipio', 'Describe qué ha pasado e indica tu municipio. No envíes llaves, documentos personales o información innecesaria al contactar.'],
       ['Disponibilidad y condiciones', 'Consulta el horario y las condiciones antes de acordar la intervención. No se anuncia atención inmediata ni un tiempo de llegada.'],
     ],
     benefit: 'El contacto específico para apertura de puertas evita pedirte datos de una reforma y facilita centrarse en la situación que necesitas resolver.',
@@ -164,7 +164,7 @@ export const services = [
 ];
 
 export const homeFaqs = [
-  ['¿Cómo pido presupuesto?', 'Indica el servicio, el municipio y qué necesitas en el formulario. También puedes llamar o escribir por WhatsApp al 602 089 887.'],
+  ['¿Cómo pido presupuesto?', 'Llama o escribe por WhatsApp al 602 089 887. Indica el servicio, el municipio y qué necesitas.'],
   ['¿Qué servicios puedo consultar?', 'Reformas de pisos, cocinas y baños, trabajos de pladur y techos, desatascos y cerrajería para apertura de puertas. El alcance se concreta para cada consulta.'],
   ['¿Realizáis apertura de puertas?', 'Sí. La cerrajería tiene una vía de contacto propia. Cuéntanos el tipo de puerta y qué ha ocurrido para consultar disponibilidad.'],
   ['¿Tenéis local de atención al público?', 'Nos desplazamos al lugar del trabajo. No atendemos clientes en un establecimiento abierto al público.'],
@@ -173,14 +173,14 @@ export const homeFaqs = [
 export const pages = [
   { id: 'home', path: '/', label: 'Inicio', keyword: 'reformas a coruña', intent: 'Elegir empresa de reformas y servicios de vivienda', title: 'Reformas en A Coruña | Presupuesto · Reformas Quijano', h1: 'Reformas en A Coruña', description: 'Reformas en A Coruña con Quijano: pisos, cocinas, baños, pladur y techos. También desatascos y cerrajería. Cuéntanos tu proyecto y solicita presupuesto.', indexable: true, slugException: 'Inicio en la raíz /.' },
   ...services.map(service => ({ ...service, indexable: true, type: 'service' })),
-  { id: 'contact', path: '/presupuesto-reformas-a-coruna/', label: 'Presupuesto', keyword: 'presupuesto reformas a coruña', intent: 'Enviar solicitud de presupuesto y contacto', title: 'Presupuesto de reformas en A Coruña | Contacta Quijano', h1: 'Presupuesto de reformas en A Coruña', description: 'Solicita presupuesto de reformas en A Coruña a Reformas Quijano. Indica servicio, municipio y lo que necesitas. Contacta también por teléfono o WhatsApp.', indexable: true },
+  { id: 'contact', path: '/presupuesto-reformas-a-coruna/', label: 'Presupuesto', keyword: 'presupuesto reformas a coruña', intent: 'Consultar presupuesto por teléfono o WhatsApp', title: 'Presupuesto de reformas en A Coruña | Contacta Quijano', h1: 'Presupuesto de reformas en A Coruña', description: 'Solicita presupuesto de reformas en A Coruña a Reformas Quijano. Indica servicio, municipio y lo que necesitas. Contacta también por teléfono o WhatsApp.', indexable: true },
   { id: 'areas', path: '/zonas-de-servicio/', label: 'Zonas de servicio', keyword: 'zonas de servicio reformas quijano', intent: 'Comprobar cobertura del negocio', title: 'Zonas de servicio de Reformas Quijano | A Coruña', h1: 'Zonas de servicio de Reformas Quijano', description: 'Consulta las zonas de servicio de Reformas Quijano: A Coruña, Oleiros, Culleredo, Cambre, Arteixo y otros municipios. Cuéntanos dónde necesitas el trabajo.', indexable: true, slugException: 'Página informativa de cobertura, no landing municipal.' },
-  { id: 'privacy', path: '/privacidad/', label: 'Privacidad', keyword: 'privacidad reformas quijano', intent: 'Información de protección de datos', title: 'Política de privacidad | Reformas Quijano', h1: 'Política de privacidad', description: 'Información sobre los datos solicitados en el formulario de Reformas Quijano, su finalidad, conservación y contacto. Documento pendiente de revisión legal.', indexable: false },
+  { id: 'privacy', path: '/privacidad/', label: 'Privacidad', keyword: 'privacidad reformas quijano', intent: 'Información de protección de datos', title: 'Política de privacidad | Reformas Quijano', h1: 'Política de privacidad', description: 'Información de privacidad al contactar con Reformas Quijano por teléfono o WhatsApp. Finalidad y vías de contacto. Documento pendiente de revisión legal.', indexable: false },
   { id: 'legal', path: '/aviso-legal/', label: 'Aviso legal', keyword: 'aviso legal reformas quijano', intent: 'Identificación e información legal', title: 'Aviso legal | Reformas Quijano', h1: 'Aviso legal', description: 'Datos de contacto e identificación facilitados para Reformas Quijano. Condiciones de uso y contenido ilustrativo. Documento pendiente de revisión legal.', indexable: false },
-  { id: 'received', path: '/solicitud-recibida/', label: 'Solicitud recibida', keyword: null, intent: 'Confirmación privada de solicitud', title: 'Estado de tu solicitud | Reformas Quijano', h1: 'Solicitud recibida', description: 'Consulta el estado del envío de tu solicitud a Reformas Quijano y las vías de contacto disponibles. El registro no confirma una cita ni una intervención.', indexable: false },
 ];
 
 export const redirects = {
+  '/solicitud-recibida/': '/presupuesto-reformas-a-coruna/',
   '/reformas-pisos/': '/reformas-pisos-a-coruna/',
   '/reformas-integrales/': '/reformas-pisos-a-coruna/',
   '/reformas-banos/': '/reformas-banos-a-coruna/',

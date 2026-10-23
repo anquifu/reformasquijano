@@ -1,0 +1,27 @@
+---
+import { business, serviceById } from '../data/site.mjs';
+import Icon from './Icon.astro';
+const { selected = '' } = Astro.props;
+const service = serviceById(selected);
+const message = service
+  ? `Hola, Reformas Quijano. Quiero consultar sobre ${service.label.toLowerCase()}.`
+  : 'Hola, Reformas Quijano. Me gustaría consultar un presupuesto.';
+const whatsapp = `${business.whatsapp}?text=${encodeURIComponent(message)}`;
+---
+<section class="quote-section section" id="presupuesto" aria-labelledby="quote-heading">
+  <div class="quote-intro">
+    <span class="eyebrow">Demos el primer paso</span>
+    <h2 id="quote-heading">Cuéntanos qué necesitas</h2>
+    <p>Llámanos o escríbenos por WhatsApp. Dinos qué trabajo necesitas y en qué municipio está la vivienda.</p>
+    <a class="quote-phone" href={business.tel} data-conversion="click_phone"><Icon name="phone" size={27} />{business.phone}</a>
+    <p class="opening-hours">{business.hours[0]}<br />{business.hours[1]}</p>
+  </div>
+  <div class="contact-options">
+    <h3>Hablemos de tu proyecto</h3>
+    <p>Una reforma, un desatasco o una apertura de puerta. Cuéntanos tu caso y consultamos alcance y disponibilidad.</p>
+    <a class="button button-primary" href={whatsapp} target="_blank" rel="noopener noreferrer" data-conversion="click_whatsapp"><Icon name="whatsapp-logo" />Consultar por WhatsApp</a>
+    <a class="button button-outline" href={business.tel} data-conversion="click_phone"><Icon name="phone" />Llamar al {business.phone}</a>
+    <p class="contact-note">WhatsApp abrirá un mensaje que puedes revisar antes de enviarlo. La visita se acuerda al hablar contigo.</p>
+    <a class="text-link" href="/privacidad/">Información de privacidad</a>
+  </div>
+</section>
