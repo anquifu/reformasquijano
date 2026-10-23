@@ -38,6 +38,7 @@ Las pruebas de navegador requieren Chromium (`CHROMIUM_PATH`, por defecto `/usr/
 - [Mapa SEO y rutas](SEO_MAP.md)
 - [Arquitectura e inventario](docs/ARQUITECTURA.md)
 - [Despliegue y pendientes](docs/DESPLIEGUE.md)
+- [Configuración de Hostinger y diagnóstico del 403](docs/HOSTINGER.md)
 - [Validación](docs/VALIDACION.md)
 - [Revisión visual](design-qa.md)
 - [Auditoría de los materiales aportados](docs/AUDITORIA_INSUMOS.md)
