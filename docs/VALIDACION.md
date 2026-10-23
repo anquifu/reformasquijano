@@ -1,39 +1,37 @@
-# Validación de la versión de revisión
+# Validación de la versión HTML + PHP
 
-22 de octubre de 2026. Entorno local Node 24, Astro SSR y Chromium. No se ha publicado el sitio.
+23 de octubre de 2026. Comprobación local con PHP 8.4 y Chromium. Los archivos públicos son HTML real; PHP se limita al formulario. No se ha cambiado el tipo de sitio ni subido el paquete a Hostinger desde este entorno.
 
 | Comprobación | Resultado observado |
 |---|---|
-| Compilación de producción | Correcta |
-| Astro/TypeScript | 0 errores, 0 advertencias |
-| Pruebas de datos y backend | 5 aprobadas: token, validación, clasificación, SQLite/idempotencia/límites/borrado y SMTP local con fallo/reintento |
-| Rutas/SEO | 12 páginas y 26 destinos internos verificados; sin fallos |
-| Indexación | Vista previa noindex y sitemap vacío; servidor local separado con indexación activa probado: 9 rutas candidatas |
-| Metadatos y estructura | H1, title, description, canonical, OG, Twitter y JSON-LD comprobados por ruta |
-| Estados HTTP | Rutas conocidas 200, desconocidas 404; redirecciones heredadas 301 |
-| Formulario en navegador | Registro AJAX 201 y confirmación; registro nativo sin JavaScript y redirección a confirmación |
-| Controles | Menú/Escape, FAQ, enlaces tel/WhatsApp y evento local de conversión comprobados; no se hicieron llamadas ni se enviaron WhatsApp |
-| Responsive | 1440, 802 y 390 px sin desbordamiento horizontal |
-| Axe WCAG 2 A/AA + 2.1 AA | 0 infracciones detectadas en la home a esos tres anchos tras corregir contraste |
+| Generación | 12 páginas independientes y 404; `dist/index.html` presente |
+| Astro/TypeScript | 0 errores, 0 advertencias, 0 hints |
+| Backend PHP | Prueba de integración aprobada: token/cookie, origen, honeypot, campos, fechas, tamaño, límites, persistencia privada, idempotencia y borrado por caducidad |
+| Correo PHP | Transporte local capturado; prueba de fallo conserva solicitud y reintento cambia a aceptada. Ningún correo externo enviado |
+| Formulario en navegador | AJAX 201, referencia y evento local; formulario PHP alternativo sin JavaScript con confirmación protegida |
+| SEO | 12 páginas, 26 destinos internos, title/H1/description/canonical/OG/Twitter/JSON-LD comprobados; sin fallos |
+| Indexación | Probadas ambas compilaciones: revisión noindex/sitemap vacío y publicación con 9 URLs en sitemap |
+| Estados y navegación | 200, redirecciones 301 y 404 comprobados mediante servidor local que emula `.htaccess` |
+| Responsive | 1440, 802 y 390 px sin desbordamiento |
+| Axe WCAG 2 A/AA + 2.1 AA | 0 infracciones detectadas en la home en esos tres anchos |
 | JavaScript/CSP | 0 errores de navegador en la prueba final |
-| Dependencias de producción | npm audit: 0 vulnerabilidades reportadas tras actualizar sharp a 0.35.5 |
+| Dependencias de desarrollo | npm audit completo: 0 vulnerabilidades reportadas |
 
-## Rendimiento
+La prueba de integración PHP utiliza un proceso PHP real y archivos temporales fuera del directorio público. Verifica que un formulario enviado dos veces no duplica el registro ni el correo, que un cambio con la misma referencia se rechaza y que un fallo del transporte no pierde la solicitud. Las confirmaciones no prometen una cita ni entrega del email.
 
-Una ejecución Lighthouse móvil local, con simulación de red/CPU, obtuvo **98/100**, **LCP 2,4 s**, **CLS 0**, **TBT 0 ms**. Informe: `artifacts/lighthouse-mobile.json`. Se tomó antes de los últimos ajustes de contraste y del origen permitido en la API; no es una medición del hosting final ni garantiza resultados con usuarios reales. INP y Core Web Vitals de campo todavía no están medidos.
+## Evidencias
 
-## Corrección del aviso de dependencias en Hostinger
+- `artifacts/seo-preview.json` y `artifacts/seo-indexable.json`.
+- `artifacts/browser-report.json`.
+- Capturas locales en `artifacts/screenshots/home-1440.png`, `home-802.png` y `home-390.png`.
+- Prueba reproducible: `PHP_BIN=/ruta/php npm test`, después de compilar.
 
-El escáner señaló `basic-ftp@5.3.1` (CVE-2026-102990, GHSA-c475-qrg2-pj4r). Era una dependencia transitiva de Lighthouse 12.8.2, usada para auditorías locales. Se actualizó Lighthouse a **13.5.0**, fijando la versión en `package.json` y regenerando `package-lock.json`. La cadena nueva ya no instala `basic-ftp`; no se oculta ni se excluye el aviso del escáner.
+## Límites
 
-La auditoría completa, incluyendo desarrollo, pasó de 27 avisos a **0 vulnerabilidades reportadas**. La compilación, la comprobación Astro/TypeScript y las cinco pruebas del backend volvieron a pasar. Hostinger debe desplegar el commit actualizado de `main` e instalar con `npm ci` para usar este árbol de dependencias. Esta corrección resuelve el aviso del paquete; el funcionamiento del dominio requiere comprobar el resultado del despliegue en Hostinger.
+El servidor local emula las rutas y cabeceras de Apache/LiteSpeed; no sustituye la comprobación del `.htaccess`, permisos y transporte de correo en el hosting real. La entrega al buzón `info@reformasquijano.online`, el almacenamiento privado y la tarea programada de limpieza se deben verificar al subir.
 
-## Límites y advertencias
+Los títulos cortos de privacidad, aviso legal y confirmación y una descripción de cerrajería de 156 caracteres generan avisos editoriales de longitud, sin fallos técnicos. No se han medido volúmenes de búsqueda, posiciones ni tráfico real. La inspección automatizada no certifica accesibilidad completa ni cubre Safari/dispositivos físicos.
 
-El contenido SEO utiliza los documentos aportados y los servicios confirmados. No se dispone de métricas verificadas de Ubersuggest ni de una investigación de competidores actualizada; no se han presentado volúmenes o posiciones inventadas.
+Los resultados Lighthouse de la versión Node anterior no se presentan como mediciones de esta entrega. INP y Core Web Vitals de campo quedan pendientes del despliegue y tráfico suficiente.
 
-El validador conserva avisos editoriales por títulos cortos en privacidad, aviso legal y confirmación y una descripción de cerrajería de 156 caracteres. Son guías de longitud, no errores técnicos; el ajuste visual de Google depende también del ancho del texto.
-
-La entrega SMTP se ha probado exclusivamente con un receptor local; el correo real y DNS no están configurados. Las solicitudes de navegador son ficticias en una base de pruebas fuera del repositorio. La revisión automática de accesibilidad de la home no certifica todo el sitio ni sustituye pruebas manuales con lector de pantalla. No se han probado Safari/iOS o dispositivos físicos.
-
-La dirección fiscal y el NIF no se han facilitado. Los textos legales son borradores señalados y no indexables. El NAP utiliza únicamente nombre, teléfono y zonas reales confirmadas, sin publicar una dirección inexistente. Ver `DESPLIEGUE.md` antes de cualquier publicación.
+Los datos legales siguen pendientes de completar/revisar. No hay NIF ni dirección inventados. La indexación se puede activar al generar los HTML, pero no implica aprobación legal ni publicación automática.

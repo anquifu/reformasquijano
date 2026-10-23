@@ -14,3 +14,7 @@ Cambios justificados respecto al boceto: galería retirada por falta de proyecto
 Correcciones durante QA: JavaScript externo para respetar CSP; tono verde más oscuro para el contraste en fondos claros. Verificación automatizada WCAG A/AA en tres tamaños, complementada con inspección visual. Esto no equivale a una certificación de accesibilidad ni reemplaza una revisión completa con tecnologías de apoyo.
 
 La aprobación visual no implica preparación legal u operativa para publicar: ver `docs/DESPLIEGUE.md`.
+
+## Revalidación HTML + PHP — 23 de octubre de 2026
+
+Resultado: **passed** en renderizado local. Se volvieron a capturar las páginas a 1440, 802 y 390 px sobre la entrega HTML. El diseño, las fotos, la tipografía y los CTA se conservan. Sin overflow ni infracciones detectadas por Axe en la home. El formulario se probó con AJAX y mediante el enlace PHP para navegación sin JavaScript. La verificación pública en Hostinger sigue pendiente de subir/configurar el hosting PHP.

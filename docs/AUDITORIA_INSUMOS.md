@@ -34,3 +34,7 @@ Fecha: 22/10/2026. Antes de escribir la aplicación se han revisado el repositor
 ## Límites vigentes
 
 Faltan hosting, credenciales SMTP, revisión legal y decisión final del slug de cerrajería. Se continúa con servidor Node, persistencia local y pruebas SMTP aisladas. Sin despliegue, mensajes reales ni modificaciones de Google Business Profile. No hay métricas SEO reales ni prueba de resultados orgánicos.
+
+## Actualización de arquitectura — 23 de octubre de 2026
+
+A petición del usuario se sustituye el servidor Node por páginas HTML generadas y un procesador PHP para hosting web convencional. La mención a Node/SMTP del diagnóstico inicial es histórica: las instrucciones vigentes están en `ARQUITECTURA.md`, `HOSTINGER.md` y `DESPLIEGUE.md`. Se mantienen pendientes la entrega real de correo y la revisión legal; no se añaden datos de negocio ni métricas SEO inventados.

@@ -25,7 +25,7 @@ const schema = JSON.stringify(structuredData(page)).replace(/</g, '\\u003c');
     <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content={page.title} /><meta name="twitter:description" content={page.description} /><meta name="twitter:image" content={`${siteUrl}/images/salon-cocina-roble-social.webp`} />
     <meta name="theme-color" content="#12364d" />
     <link rel="icon" href="/icons/house-line.svg" type="image/svg+xml" />
-    <script is:inline type="application/ld+json" nonce={Astro.locals.nonce} set:html={schema} />
+    <script is:inline type="application/ld+json" set:html={schema} />
   </head>
   <body>
     <a class="skip-link" href="#contenido">Saltar al contenido</a>

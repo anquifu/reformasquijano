@@ -11,6 +11,24 @@ document.querySelectorAll<HTMLFormElement>('[data-lead-form]').forEach(form => {
   const status = form.querySelector<HTMLElement>('.form-status')!;
   const button = form.querySelector<HTMLButtonElement>('[type="submit"]')!;
   let sending = false;
+  const csrf = form.elements.namedItem('csrf') as HTMLInputElement;
+  const requestId = form.elements.namedItem('requestId') as HTMLInputElement;
+  let tokenPromise: Promise<void> | null = null;
+  const prepare = () => {
+    if (csrf.value && requestId.value) return Promise.resolve();
+    if (!tokenPromise) tokenPromise = fetch('/api/formulario.php?token=1', {credentials:'same-origin',headers:{Accept:'application/json'},cache:'no-store'})
+      .then(async response => {
+        if (!response.ok) throw new Error('FORM_UNAVAILABLE');
+        const data = await response.json();
+        csrf.value = data.csrf; requestId.value = data.requestId;
+      }).catch(error => { tokenPromise=null; throw error; });
+    return tokenPromise;
+  };
+  // Preparar la protección al interactuar, sin impedir leer las páginas HTML.
+  form.addEventListener('focusin', () => { void prepare().catch(() => {}); }, {once:true});
+  const date = form.querySelector<HTMLInputElement>('[name="startDate"]');
+  if (date) date.min = new Date().toLocaleDateString('en-CA');
+
   form.addEventListener('submit', async event => {
     event.preventDefault();
     if (sending || !form.reportValidity()) return;
@@ -19,6 +37,7 @@ document.querySelectorAll<HTMLFormElement>('[data-lead-form]').forEach(form => {
     sending = true; button.disabled = true; button.textContent = 'Enviando…';
     status.hidden = false; status.textContent = 'Estamos registrando tu solicitud.'; status.className = 'form-status';
     try {
+      await prepare();
       const body = new URLSearchParams();
       for (const [key,value] of new FormData(form)) if (typeof value === 'string') body.append(key,value);
       const controller = new AbortController();
@@ -28,6 +47,7 @@ document.querySelectorAll<HTMLFormElement>('[data-lead-form]').forEach(form => {
       finally { clearTimeout(timeout); }
       const result = await response.json();
       if (!response.ok || !result.ok) {
+        if (response.status === 403) { csrf.value=''; requestId.value=''; tokenPromise=null; }
         const entries = Object.entries(result.errors || {});
         let first: HTMLElement | null = null;
         for (const [field, error] of entries) {

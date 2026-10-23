@@ -1,0 +1,22 @@
+import {readFileSync,writeFileSync,mkdirSync,copyFileSync,readdirSync,statSync} from 'node:fs';
+import {createHash} from 'node:crypto';
+import {join} from 'node:path';
+import {load} from 'cheerio';
+import {business,pages,services,redirects} from '../src/data/site.mjs';
+import {indexingEnabled,siteUrl,retentionDays} from '../src/lib/config.mjs';
+mkdirSync('dist/api/_lib',{recursive:true});
+for(const name of ['formulario','solicitudes','confirmacion'])copyFileSync(`php/${name}.php`,`dist/api/${name}.php`);
+copyFileSync('php/app.php','dist/api/_lib/app.php');
+const config={site:siteUrl,email:business.email,areas:business.areas,services:Object.fromEntries(services.map(s=>[s.id,s.label])),paths:pages.map(p=>p.path),retentionDays,indexingEnabled};
+const encoded=JSON.stringify(config).replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+writeFileSync('dist/api/_lib/site-config.php',`<?php\nif (!defined('RQ_APP')) { http_response_code(404); exit; }\nreturn json_decode('${encoded}',true,512,JSON_THROW_ON_ERROR);\n`);
+writeFileSync('dist/api/_lib/.htaccess','Require all denied\n');
+copyFileSync('dist/404/index.html','dist/404.html');
+const hashes=new Set();
+function inspect(dir){for(const name of readdirSync(dir)){const path=join(dir,name);if(statSync(path).isDirectory())inspect(path);else if(name.endsWith('.html')){const $=load(readFileSync(path,'utf8'));$('script:not([src])').each((_,el)=>hashes.add(`'sha256-${createHash('sha256').update($(el).html()||'').digest('base64')}'`));}}}
+inspect('dist');
+const csp=`default-src 'self'; script-src 'self' ${[...hashes].join(' ')}; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'`;
+const rules=Object.entries(redirects).map(([from,to])=>`RewriteRule ^${from.slice(1).replace(/\/$/,'')}/?$ ${to} [R=301,L]`).join('\n');
+writeFileSync('dist/.htaccess',`# HTML estático + PHP. Apache/LiteSpeed (Hostinger hosting web).\nDirectoryIndex index.html\nOptions -Indexes -MultiViews\nErrorDocument 404 /404.html\n<IfModule mod_rewrite.c>\nRewriteEngine On\nRewriteRule ^api/_lib(?:/|$) - [F,L]\n${rules}\n</IfModule>\n<FilesMatch "^(?:\\.env|package(?:-lock)?\\.json)$">\nRequire all denied\n</FilesMatch>\n<IfModule mod_headers.c>\nHeader always set X-Content-Type-Options "nosniff"\nHeader always set Referrer-Policy "strict-origin-when-cross-origin"\nHeader always set X-Frame-Options "DENY"\nHeader always set Content-Security-Policy "${csp}"\n${indexingEnabled?'':'Header always set X-Robots-Tag "noindex, nofollow"\n'}</IfModule>\n`);
+writeFileSync('dist/deployment-info.json',JSON.stringify({format:'static-html-php',indexing:indexingEnabled,canonicalOrigin:siteUrl,pages:pages.length},null,2));
+console.log(`HTML preparado: ${pages.length} páginas, PHP y .htaccess. index.html en la raíz. Indexación: ${indexingEnabled}.`);

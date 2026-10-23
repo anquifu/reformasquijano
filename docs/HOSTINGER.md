@@ -1,43 +1,45 @@
-# Hostinger: ejecutar la aplicación como servidor Node
+# Subir la web HTML a Hostinger
 
-El 23 de octubre de 2026 se comprobó el dominio público:
+## Qué paquete utilizar
 
-| URL | Respuesta |
-|---|---|
-| `/` | 403, página de Hostinger |
-| `/robots.txt` | 404, página de Hostinger |
-| `/images/salon-cocina-roble-luz-natural-640.webp` | 404 |
-| `/client/images/salon-cocina-roble-luz-natural-640.webp` | 200, WebP |
-| `/reformas-banos-a-coruna/` | 404 |
+`Reformas-Quijano-HTML.zip` contiene los archivos **ya generados**. Dentro se ven `index.html`, `.htaccess`, `robots.txt`, `sitemap.xml`, `_astro/`, `images/`, `api/` y las carpetas de cada página. No hace falta compilar nada en Hostinger.
 
-Esto muestra que Hostinger está exponiendo los archivos de `dist` directamente, sin que estas rutas lleguen al servidor Astro. `dist` contiene `client` y `server`, no un `index.html`: es una compilación SSR. Un despliegue marcado como completado no demuestra que el proceso Node y el enrutamiento HTTP estén activos.
+## Hosting adecuado
 
-## Configuración de la aplicación existente
+Usar un **sitio de hosting web PHP/HTML convencional**, con PHP 8.2 o superior. La aplicación Node configurada anteriormente administra sus propios despliegues y puede sobrescribir `public_html`; no se debe mezclar esa integración con una subida manual.
 
-En **Configuración y redistribución**, mantener Node 24, raíz `./` y rama `main`. Configurar:
+Desde el panel, seleccionar o preparar el sitio PHP/HTML asociado a `reformasquijano.online`. Si el dominio sigue asociado a la app Node, hacer la migración de tipo de sitio con las opciones del plan o con soporte de Hostinger, conservando una copia del despliegue anterior. No borrar el dominio, el buzón ni sus registros DNS para hacer este cambio.
 
-- Instalación: `npm ci`.
-- Compilación: `npm run build`.
-- Directorio de salida: `dist`.
-- Archivo de entrada del servidor, desde la raíz del proyecto: `dist/server/entry.mjs`.
-- Si aparece un comando de inicio: `npm start`.
-- `HOST=0.0.0.0`; utilizar el puerto asignado por Hostinger, sin imponer el puerto local 4321.
+## Subida
 
-Si el preajuste Astro solo permite publicar archivos estáticos o no muestra el archivo de entrada, elegir **Other / Otro** para declarar explícitamente la aplicación Node. Hostinger documenta este preajuste y su campo Entry file. No cambiar el proyecto a salida estática: el formulario y las páginas dependen del servidor.
+1. Abrir el Administrador de archivos del sitio PHP/HTML y entrar en `public_html`.
+2. Guardar una copia de los archivos y del `.htaccess` actuales antes de reemplazarlos.
+3. Subir y extraer `Reformas-Quijano-HTML.zip` dentro de `public_html`. `index.html` debe quedar directamente en `public_html/index.html`, sin una carpeta `dist` o `reformasquijano` intermedia.
+4. Incluir el `.htaccess` del paquete. Revisar y conservar las reglas específicas del hosting que fueran necesarias; eliminar solo reglas antiguas de arranque Node al migrar. No modificar archivos de correo o verificación del dominio.
+5. Abrir el dominio y una página de servicios. Comprobar también imágenes, menú, teléfono, WhatsApp y un envío ficticio antes de aceptar solicitudes reales.
 
-`package.json` declara también `main: dist/server/entry.mjs`. Esto identifica la entrada para herramientas que consultan ese campo, pero no reemplaza una selección incorrecta del modo de despliegue en el panel.
+No hay archivo de entrada Node, directorio de salida para un servidor ni comando `npm start` en el hosting. Se sirve `index.html`; PHP procesa únicamente el formulario.
 
-Si aparece «La cuenta de GitHub no coincide», conectar la cuenta con acceso a `anquifu/reformasquijano` antes de redistribuir. Un despliegue correcto de servidor debe mostrar un proceso en ejecución y registros de arranque.
+## Formulario y almacenamiento
 
-## Comprobación después de redistribuir
+El formulario guarda cada solicitud en `../.quijano-private` (fuera de `public_html`) con permisos privados y usa `mail()` de PHP para notificar a `info@reformasquijano.online`. La carpeta y su secreto se crean automáticamente. El buzón debe existir y el hosting debe permitir el envío desde ese dominio. Si el transporte falla, la solicitud queda guardada para reintento; la entrega al buzón real todavía requiere una prueba en Hostinger.
 
-1. La home debe devolver 200 y mostrar «Reformas en A Coruña».
-2. Las imágenes deben cargar en `/images/...` y el CSS en `/_astro/...`.
-3. `/robots.txt` debe responder con el contenido de la aplicación; en revisión, `Disallow: /`.
-4. Las páginas de servicios deben devolver 200; una ruta inexistente, el 404 diseñado de la web.
+Si PHP no puede escribir fuera de `public_html`, configurar `RQ_PRIVATE_DIR` con una ruta privada permitida por el hosting. No trasladar las solicitudes a una carpeta pública para resolver un error de permisos.
 
-Si el proceso Node está en ejecución pero sigue el 403, comprobar con Hostinger el enrutamiento generado en `public_html/.htaccess` hacia `hbuilds/current/nodejs`. La documentación indica que una redistribución regenera ese archivo. No añadir reglas genéricas a ciegas ni modificar permisos globales.
+Los campos opcionales de configuración están en `php/private-config.example.php` del repositorio. Si se necesitan, copiar como `config.php` dentro de `.quijano-private`, nunca dentro de `public_html`.
 
-La base SQLite necesita una ubicación privada persistente fuera de los directorios de versiones que Hostinger elimina al redistribuir. Mantener la revisión con datos ficticios hasta configurar almacenamiento, correo y textos legales; consultar `DESPLIEGUE.md`.
+## Indexación
 
-Fuente: [Guía oficial de despliegue Node.js en Hostinger](https://www.hostinger.com/support/how-to-deploy-a-nodejs-website-in-hostinger/), consultada el 23 de octubre de 2026.
+El paquete `Reformas-Quijano-HTML.zip` está generado con indexación activa: nueve URLs entran en sitemap; privacidad, aviso legal y confirmación siguen sin indexarse. Está preparado para la publicación después de cerrar los pendientes legales y de correo. La compilación local predeterminada mantiene `noindex` para las revisiones. Para reproducir la entrega indexable, generar con `SITE_INDEXING=true npm run build`. Cambiar solo `robots.txt` no basta porque también hay metadatos y cabeceras.
+
+## Comprobaciones
+
+- `/`: 200, título «Reformas en A Coruña» y diseño completo.
+- `/reformas-banos-a-coruna/`: 200 con contenido propio.
+- `/images/salon-cocina-roble-luz-natural-640.webp`: 200.
+- `/pagina-inexistente/`: 404 con el diseño de la web.
+- `/api/_lib/app.php`: acceso HTTP denegado.
+- `/api/formulario.php`: formulario disponible sin JavaScript.
+- Envío ficticio: referencia visible, archivo privado y comprobación del aviso en el buzón.
+
+La versión anterior devolvía 403 porque se publicaba `dist` del servidor como carpeta estática, sin `index.html`. Esta versión sí incluye ese archivo.

@@ -6,17 +6,16 @@ import LeadForm from '../components/LeadForm.astro';
 import Coverage from '../components/Coverage.astro';
 import ServiceGrid from '../components/ServiceGrid.astro';
 import Icon from '../components/Icon.astro';
-import { pages, business, quotePath, services } from '../data/site.mjs';
+import { pages, business, quotePath } from '../data/site.mjs';
 import { retentionDays } from '../lib/config.mjs';
-const path = Astro.url.pathname.endsWith('/') ? Astro.url.pathname : `${Astro.url.pathname}/`;
-let page = pages.find(p => p.path === path);
-if (!page) {
-  Astro.response.status = 404;
-  page = { id:'404',path, label:'Página no encontrada',keyword:null,intent:'Página no encontrada',title:'Página no encontrada | Reformas Quijano',h1:'Esta página no está aquí',description:'La dirección solicitada no existe. Consulta los servicios de Reformas Quijano o vuelve al inicio para contactar y solicitar presupuesto.',indexable:false };
+export function getStaticPaths() {
+  const notFound = { id:'404',path:'/404/',label:'Página no encontrada',keyword:null,intent:'Página no encontrada',title:'Página no encontrada | Reformas Quijano',h1:'Esta página no está aquí',description:'La dirección solicitada no existe. Consulta los servicios de Reformas Quijano o vuelve al inicio para contactar y solicitar presupuesto.',indexable:false };
+  return [...pages,notFound].map(page => ({ params:{page:page.path === '/' ? undefined : page.path.replace(/^\/|\/$/g,'')}, props:{page} }));
 }
-const received = Astro.cookies.get('rq_received')?.value === '1';
-const requested = Astro.url.searchParams.get('servicio');
-const selected = services.some(s => s.id === requested) ? requested : '';
+const { page } = Astro.props;
+const received = false;
+const selected = '';
+
 ---
 <Layout page={page}>
   {page.id === 'home' ? <Home /> : 'type' in page && page.type === 'service' ? <ServicePage page={page} /> : <div class="container utility-page">

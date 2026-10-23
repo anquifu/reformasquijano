@@ -1,34 +1,34 @@
-# Despliegue y pendientes de publicación
+# Publicación y operación
 
-**No se ha publicado ni modificado el DNS.** Dominio previsto: `reformasquijano.online`. Correo previsto: `info@reformasquijano.online`.
+Esta versión sustituye el despliegue Node por HTML + PHP en hosting web convencional. Ver `HOSTINGER.md` para la subida. Se conserva el diseño corporativo, el hero completo, los enlaces de contacto y las URLs existentes.
 
-## Lo que falta
+## Pendientes reales
 
-1. Elegir/acceder al hosting con Node 24, HTTPS, volumen persistente y tareas programadas. Configurar DNS y certificado cuando se autorice publicar.
-2. Crear o verificar la cuenta de correo y proporcionar SMTP mediante secretos del hosting. Configurar SPF, DKIM y DMARC según su proveedor. La entrega a la cuenta real no está verificada.
-3. Revisar y completar los textos legales. Titular facilitado: Andrea Quijano. No se ha facilitado NIF ni dirección legal; no están inventados ni incluidos en código. La preferencia por mantener el NIF privado no resuelve por sí sola las obligaciones del aviso legal. Acordar una solución válida con asesoramiento jurídico antes de publicar. No se requiere mostrar una oficina de atención al público inexistente.
-4. Confirmar política de conservación y responsables/proveedores de datos: los 30 días son una configuración técnica provisional. El buzón y sus copias necesitan su propia política; borrar SQLite no borra los emails.
-5. Resolver la excepción de URL de cerrajería descrita en `SEO_MAP.md`.
-6. Aprobar la publicación. Solo entonces activar indexación. Los borradores legales permanecen noindex por diseño, aunque noindex no es control de acceso.
+- Asignar el dominio al sitio PHP/HTML y subir el paquete. No se ha realizado esta operación desde Codex: no hay acceso al panel autenticado.
+- Crear/verificar el buzón `info@reformasquijano.online`, la configuración de envío PHP del hosting y SPF/DKIM/DMARC con su proveedor. Las pruebas locales capturan el correo y no verifican la recepción real.
+- Completar la revisión legal: titular facilitada Andrea Quijano; dirección legal e identificación fiscal pendientes. No se publica ningún NIF ni dirección inventados. La preferencia por privacidad debe resolverse con una forma legalmente válida antes de publicar la versión definitiva.
+- Confirmar conservación y proveedores. Treinta días es la configuración técnica provisional; el buzón y las copias requieren una política propia. La purga de archivos no borra los emails.
+- Resolver la excepción de `/cerrajeria/` documentada en `SEO_MAP.md` antes de cualquier cambio de slug.
+- Activar indexación tras esas comprobaciones y registrar el sitemap en Search Console. No se prometen posiciones ni métricas SEO que no se hayan medido.
 
-## Configuración
+## Operación privada
 
-Copiar `.env.example` a secretos del entorno, nunca subir `.env`. Generar `FORM_SECRET` aleatorio de al menos 32 bytes y mantenerlo entre reinicios. Configurar `PUBLIC_SITE_URL=https://reformasquijano.online`, `MAIL_FROM` y `LEAD_EMAIL` con el remitente autorizado y el destinatario real. SMTP remoto verifica TLS; no desactivarlo.
+El almacenamiento se crea como `.quijano-private` junto a `public_html`, no dentro. Restringir su acceso al usuario PHP y conservar una copia cifrada. La web no necesita bases de datos ni credenciales SMTP en archivos públicos.
 
-`LEADS_DB` debe apuntar a un volumen privado persistente, fuera de `public/` y con acceso restringido al usuario del proceso. Para esta arquitectura usar **una instancia Node**: SQLite y la limitación local no están diseñados para varias réplicas. Establecer copia de seguridad cifrada, política de borrado y prueba de restauración. No usar filesystem efímero/serverless sin adaptar almacenamiento.
+El comando de administración está en el repositorio, no en el ZIP público. Para usarlo en el hosting, conservar una copia del proyecto fuera de `public_html` y señalar `RQ_PRIVATE_DIR` a la carpeta real:
 
 ```sh
-npm ci
-ASTRO_TELEMETRY_DISABLED=1 npm run check
-npm test
-ASTRO_TELEMETRY_DISABLED=1 npm run build
-npm start
+RQ_PRIVATE_DIR=/ruta/privada/.quijano-private php scripts/leads.php list
+RQ_PRIVATE_DIR=/ruta/privada/.quijano-private php scripts/leads.php purge
+RQ_PRIVATE_DIR=/ruta/privada/.quijano-private php scripts/leads.php retry
 ```
 
-Ejecutar detrás de proxy HTTPS. Configurar `TRUST_PROXY=1` únicamente si el proxy reescribe la IP original e impide el acceso directo al servidor. No cachear HTML con tokens ni respuestas de API. Proteger preproducción con autenticación del hosting: robots/noindex no impide visitas.
+`show ID` muestra datos personales en terminal autorizada; `delete ID` borra una solicitud. `list` muestra referencia, fecha, clasificación y estado de correo, sin datos de contacto.
 
-Programar `npm run mail:retry` cada cinco minutos con exclusión mutua (`flock`) y `npm run leads -- purge` diariamente. Evitar que el recuperador de envíos interrumpidos corra a la vez que un envío activo: el mecanismo actual puede reenviar una notificación en ese caso; un Message-ID estable ayuda, pero no garantiza deduplicación en todos los buzones. Para mayor volumen, implantar una cola con arrendamientos antes de escalar.
+Programar `purge` diariamente y `retry` cada cinco minutos. El comando necesita la copia compilada `dist/api/_lib` del proyecto privado. No subir el administrador a una ruta accesible por HTTP. Las solicitudes no se pierden al actualizar los HTML porque el almacenamiento queda fuera de `public_html`.
 
-Consultar solicitudes sin PII: `npm run leads -- list`. `show ID` muestra datos personales solo en terminal autorizada; `delete ID` borra una solicitud. No existe un panel de administración público.
+## SEO y rendimiento
 
-Antes de publicar, probar el registro real controlado y la recepción en el buzón con autorización; comprobar llamadas y WhatsApp en dispositivo, revisar datos legales, HTTPS y recuperación. Tras activar `SITE_INDEXING=true`, reiniciar, comprobar robots/sitemap/canonical y registrar Search Console. No se han verificado métricas de Ubersuggest ni tráfico real. Rendimiento de campo/INP queda pendiente de tráfico suficiente.
+Cada URL entrega su contenido en HTML: title, H1, primer párrafo, metadescripción, canonical, Open Graph, Twitter, datos estructurados y enlaces internos. Las redirecciones conservan las URLs antiguas. No hay páginas repetidas por municipio ni una SPA vacía que dependa de JavaScript.
+
+La versión anterior con Astro SSR también era rastreable; no era una limitación SEO. El cambio reduce los requisitos operativos del hosting. Un 403 sí impide el rastreo, por lo que la validación pública del despliegue es un paso necesario. Tras activar indexación, comprobar status 200, robots, sitemap y canonical antes de solicitar indexación.

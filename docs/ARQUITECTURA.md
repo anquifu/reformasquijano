@@ -1,34 +1,26 @@
-# Arquitectura e inventario
+# Arquitectura e inventario — versión HTML + PHP
 
-Astro SSR entrega contenido y metadatos completos sin depender de JavaScript. El cliente añade envío AJAX, navegación y eventos locales; el formulario también funciona de forma nativa. Node 24 ejecuta SQLite, validación y notificaciones SMTP.
+El sitio público está formado por páginas HTML independientes, CSS, JavaScript pequeño e imágenes WebP. El hosting no renderiza la home ni los servicios: entrega directamente los archivos. Astro solo genera esos archivos durante el desarrollo.
 
-## Archivos
+- `src/data/site.mjs`: datos confirmados del negocio y contenido único de cada servicio, rutas y redirecciones.
+- `src/pages/[...page].astro`: generación de las doce páginas y un 404.
+- `src/layouts/` y `src/components/`: plantillas compartidas; el resultado final es HTML.
+- `src/styles/global.css`: diseño adaptable; fuentes locales y fotografías optimizadas.
+- `src/scripts/client.ts`: menú, eventos locales de contacto y mejora AJAX del formulario. El contenido SEO no depende de este script.
+- `php/`: procesador del formulario, emisión de tokens y confirmación segura. El paquete coloca estos archivos en `api/`.
+- `scripts/package-html.mjs`: copia PHP, genera configuración pública, 404 y `.htaccess` con redirecciones y hashes CSP de los scripts JSON-LD.
+- `scripts/serve-php.mjs` y `php-router.php`: servidor local de pruebas; el hosting usa Apache/LiteSpeed.
+- `scripts/leads.php`: consulta local, borrado, purga y reintento de notificaciones. Nunca se publica como ruta administrativa.
+- `dist/`: entrega lista para subir; no incluye código fuente de Astro, npm, secretos ni solicitudes.
 
-- `src/data/site.mjs`: datos únicos de negocio, servicios, contenido, rutas y redirecciones. Nombre, teléfono, horarios y cobertura se reutilizan desde esta fuente.
-- `src/pages/[...page].astro`: home, seis servicios y páginas auxiliares. Las rutas desconocidas devuelven 404.
-- `src/layouts/Layout.astro`: cabecera, pie, metadatos y navegación.
-- `src/components/`: hero, fichas, FAQ, cobertura y formulario accesible.
-- `src/styles/global.css`: adaptación a móvil, tableta y escritorio.
-- `src/pages/api/solicitudes.ts`: validación de origen, token/cookie firmados, honeypot, límite de frecuencia y tamaño; respuesta real según resultado del registro.
-- `src/lib/leads.mjs`: almacenamiento privado, idempotencia, clasificación, retención y estado de correo.
-- `src/lib/mail.mjs`: SMTP con TLS para proveedores remotos y cola de reintentos.
-- `src/middleware.ts`: redirecciones, CSP, cabeceras de seguridad y protección contra indexación de la vista previa.
-- `src/lib/structured-data.mjs`: Organization, WebSite, Service y BreadcrumbList. Sin dirección inventada, reseñas ni certificaciones.
-- `public/images/`: fotografía ilustrativa generada, optimizada en WebP a 640, 960 y 1680 px y variante social. No es un proyecto propio.
-- `public/icons/`: iconos Phosphor. Fuentes Manrope alojadas localmente.
-- `scripts/`: mapa SEO, validación HTTP/navegador, gestión local de solicitudes y reintentos.
-- `tests/`: controles de seguridad y almacenamiento y prueba de entrega/reintento SMTP local.
+## Solicitudes
 
-## Flujo de presupuesto
+El JavaScript solicita un token específico de cada visitante a PHP al interactuar con el formulario. El HTML estático no contiene un token compartido. PHP verifica origen, cookie firmada, caducidad, campo trampa, tamaño, límite de frecuencia y campos del negocio. Luego guarda una solicitud idempotente y notifica mediante el transporte de correo PHP.
 
-Formulario → validación del servidor → SQLite → intento de notificación SMTP → confirmación de registro. La confirmación no afirma que el correo haya llegado ni que haya una cita. El fallo SMTP conserva la solicitud para reintento. Un reenvío del mismo identificador no crea otra solicitud; un cambio de contenido con ese identificador se rechaza.
+Sin JavaScript, el enlace «formulario accesible» abre el mismo diseño desde PHP con su token individual y permite enviar y recibir confirmación. Abrir una página de confirmación directamente no acredita un envío.
 
-La ficha conserva servicio, rango de presupuesto indicado por el cliente y urgencia declarada; no aplica puntuaciones comerciales inventadas. Email, presupuesto y fecha son opcionales. No se habilitan adjuntos: faltan almacenamiento seguro, controles y política operativa para ellos.
+La persistencia usa archivos JSON privados y escrituras atómicas bajo bloqueo, fuera del directorio público. Las solicitudes contienen clasificación por servicio, presupuesto y urgencia. Las IP se convierten en HMAC para la limitación; no se guardan en claro. La conservación técnica predeterminada es de 30 días y requiere tarea diaria de purga para cumplirse cuando no llegan solicitudes nuevas.
 
-Los eventos `quijano:conversion` (llamada, WhatsApp y solicitud registrada) se emiten solamente en el navegador, sin datos personales. No hay Google Analytics, píxeles publicitarios ni cookies analíticas. Las cookies de formulario son técnicas.
+La notificación se marca como `accepted` cuando `mail()` acepta el mensaje, sin afirmar entrega al buzón. Los fallos quedan pendientes para reintento, con máximo de cinco intentos y recuperación de envíos interrumpidos tras cinco minutos. Existe una posibilidad de duplicar una notificación si el proceso muere después de aceptar el correo y antes de guardar el estado, inherente a este transporte; se usa un Message-ID estable.
 
-## Decisiones editoriales
-
-La última instrucción exige proyectos reales. Al no disponer de fotografías verificadas de trabajos propios, se sustituye la galería conceptual por una explicación del proceso. No hay testimonios, precios cerrados, certificaciones, años de experiencia ni servicio 24 horas inventados. Cerrajería tiene página y contacto propios.
-
-Se agrupan pisos/integrales y pladur/techos para evitar duplicar intención. Los municipios aparecen en cobertura, sin crear páginas repetidas. `/cerrajeria/` se conserva: la alternativa `/cerrajero-a-coruna/` necesita resolver la excepción indicada por el usuario antes de migrarla.
+No se habilitan adjuntos, analítica externa ni publicidad. Las cookies del formulario son técnicas. No hay proyectos, opiniones, dirección de oficina, servicio 24 horas ni certificaciones inventados. La imagen del hero se identifica como ilustrativa.

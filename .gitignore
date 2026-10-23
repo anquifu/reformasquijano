@@ -13,3 +13,5 @@ artifacts/screenshots/
 artifacts/lighthouse*.json
 artifacts/*.html
 test-results/
+.quijano-private/
+release/
